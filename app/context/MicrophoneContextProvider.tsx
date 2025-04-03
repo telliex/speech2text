@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   createContext,
@@ -6,7 +6,7 @@ import {
   useContext,
   useState,
   ReactNode,
-} from "react";
+} from 'react';
 
 interface MicrophoneContextType {
   microphone: MediaRecorder | null;
@@ -17,12 +17,12 @@ interface MicrophoneContextType {
 }
 
 export enum MicrophoneEvents {
-  DataAvailable = "dataavailable",
-  Error = "error",
-  Pause = "pause",
-  Resume = "resume",
-  Start = "start",
-  Stop = "stop",
+  DataAvailable = 'dataavailable',
+  Error = 'error',
+  Pause = 'pause',
+  Resume = 'resume',
+  Start = 'start',
+  Stop = 'stop',
 }
 
 export enum MicrophoneState {
@@ -77,8 +77,8 @@ const MicrophoneContextProvider: React.FC<MicrophoneContextProviderProps> = ({
   const stopMicrophone = useCallback(() => {
     setMicrophoneState(MicrophoneState.Pausing);
 
-    if (microphone?.state === "recording") {
-      microphone.pause();
+    if (microphone?.state === 'recording') {
+      microphone.stop();
       setMicrophoneState(MicrophoneState.Paused);
     }
   }, [microphone]);
@@ -86,7 +86,7 @@ const MicrophoneContextProvider: React.FC<MicrophoneContextProviderProps> = ({
   const startMicrophone = useCallback(() => {
     setMicrophoneState(MicrophoneState.Opening);
 
-    if (microphone?.state === "paused") {
+    if (microphone?.state === 'paused') {
       microphone.resume();
     } else {
       microphone?.start(250);
@@ -115,7 +115,7 @@ function useMicrophone(): MicrophoneContextType {
 
   if (context === undefined) {
     throw new Error(
-      "useMicrophone must be used within a MicrophoneContextProvider"
+      'useMicrophone must be used within a MicrophoneContextProvider'
     );
   }
 

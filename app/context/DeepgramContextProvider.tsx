@@ -55,10 +55,14 @@ const DeepgramContextProvider: FunctionComponent<
    */
   const connectToDeepgram = async (options: LiveSchema, endpoint?: string) => {
     const key = await getApiKey();
-
     const deepgram = createClient(key);
 
-    const conn = deepgram.listen.live(options, endpoint);
+    const enhancedOptions = {
+      ...options,
+      diarize: true,
+    };
+
+    const conn = deepgram.listen.live(enhancedOptions, endpoint);
 
     conn.addListener(LiveTranscriptionEvents.Open, () => {
       setConnectionState(LiveConnectionState.OPEN);
