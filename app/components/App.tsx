@@ -23,6 +23,15 @@ interface TranscriptItem {
   timestamp: number;
 }
 
+interface Word {
+  word: string;
+  start: number;
+  end: number;
+  confidence: number;
+  punctuated_word: string;
+  speaker?: number;
+}
+
 const App: () => JSX.Element = () => {
   const [caption, setCaption] = useState<string | undefined>(
     'Powered by Deepgram'
@@ -83,8 +92,8 @@ const App: () => JSX.Element = () => {
       setIsTranscriptFinal(isFinal === true);
 
       // 獲取講者 ID - 從單詞中獲取
-      const words = data.channel.alternatives[0].words;
-      let currentSpeaker = undefined;
+      const words = data.channel.alternatives[0].words as Word[];
+      let currentSpeaker: string | undefined = undefined;
       if (words && words.length > 0 && words[0].speaker !== undefined) {
         currentSpeaker = words[0].speaker.toString();
         setSpeakerId(currentSpeaker);
@@ -95,16 +104,14 @@ const App: () => JSX.Element = () => {
         console.log('thisCaption !== ""', thisCaption);
         setCaption(thisCaption);
 
-        // 如果是最終結果，添加到轉錄歷史
+        // 如果是最終結果且有講者 ID，添加到轉錄歷史
         if (isFinal && currentSpeaker) {
-          setTranscripts((prev) => [
-            ...prev,
-            {
-              speaker: currentSpeaker,
-              text: thisCaption,
-              timestamp: Date.now(),
-            },
-          ]);
+          const newTranscript: TranscriptItem = {
+            speaker: currentSpeaker,
+            text: thisCaption,
+            timestamp: Date.now(),
+          };
+          setTranscripts((prev) => [...prev, newTranscript]);
         }
       }
 
